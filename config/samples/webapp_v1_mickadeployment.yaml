@@ -1,0 +1,12 @@
+apiVersion: webapp.micka.com/v1
+kind: MickaDeployment
+metadata:
+  labels:
+    app.kubernetes.io/name: mickadeployment
+    app.kubernetes.io/instance: mickadeployment-sample
+    app.kubernetes.io/part-of: operator-test
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: operator-test
+  name: mickadeployment-sample
+spec:
+  # TODO(user): Add fields here

@@ -18,13 +18,13 @@ package controller
 
 import (
 	"context"
-
+	webappv1 "github.com/mickaelchau/first-operator/api/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
-
-	webappv1 "github.com/mickaelchau/first-operator/api/v1"
+	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
 // MickaDeploymentReconciler reconciles a MickaDeployment object
@@ -47,10 +47,38 @@ type MickaDeploymentReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.16.3/pkg/reconcile
 func (r *MickaDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	// Log request
+	log := log.FromContext(ctx)
+	log.Info("Reconciling MickaDeployment")
 
-	// TODO(user): your logic here
+	// Fetch the MickaDeployment instance
+	instance := &webappv1.MickaDeployment{}
+	err := r.Get(ctx, req.NamespacedName, instance)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			// Object not found, return.  Created objects are automatically garbage collected.
+			// For additional cleanup logic use finalizers.
+			return reconcile.Result{}, nil
+		}
+		// Error reading the object - requeue the request.
+		return reconcile.Result{}, err
+	}
 
+	// Check if the Foo field is already set to "test"
+	if instance.Spec.Foo != "test" {
+		// Update the Foo field
+		instance.Spec.Foo = "test"
+		err := r.Update(ctx, instance)
+		if err != nil {
+			log.Error(err, "Failed to update MickaDeployment instance")
+			return reconcile.Result{}, err
+		}
+		log.Info("Updated Foo field to 'test'")
+	} else {
+		log.Info("Foo field is already set to 'test', no update required")
+	}
+
+	// No requeue, we only requeue if the Foo field was not already set to "test"
 	return ctrl.Result{}, nil
 }
 

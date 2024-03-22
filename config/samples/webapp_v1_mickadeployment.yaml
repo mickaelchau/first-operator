@@ -9,4 +9,5 @@ metadata:
     app.kubernetes.io/created-by: operator-test
   name: mickadeployment-sample
 spec:
+  foo: "Micka"
   # TODO(user): Add fields here

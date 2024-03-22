@@ -38,9 +38,14 @@ spec:
                 description: Foo is an example field of MickaDeployment. Edit mickadeployment_types.go
                   to remove/update
                 type: string
+              notChanged:
+                type: string
             type: object
           status:
             description: MickaDeploymentStatus defines the observed state of MickaDeployment
+            properties:
+              beforeFoo:
+                type: string
             type: object
         type: object
     served: true

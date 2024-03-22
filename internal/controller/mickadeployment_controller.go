@@ -18,6 +18,7 @@ package controller
 
 import (
 	"context"
+
 	webappv1 "github.com/mickaelchau/first-operator/api/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -64,13 +65,21 @@ func (r *MickaDeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		return reconcile.Result{}, err
 	}
 
-	// Check if the Foo field is already set to "test"
-	if instance.Spec.Foo != "test" {
+	// Check if the Foo field is already set to "updated by controller value"
+	if instance.Spec.Foo != "updated by controller value" {
 		// Update the Foo field
-		instance.Spec.Foo = "test"
+		// Update status
+		instance.Status.BeforeFoo = instance.Spec.Foo // Set the status field to past value of Foo
+
+		err = r.Status().Update(ctx, instance)
+		if err != nil {
+			log.Error(err, "Failed to update MickaDeployment status")
+			return ctrl.Result{}, err
+		}
+		instance.Spec.Foo = "updated by controller value"
 		err := r.Update(ctx, instance)
 		if err != nil {
-			log.Error(err, "Failed to update MickaDeployment instance")
+			log.Error(err, "Failed to update MickaDeployment Spec")
 			return reconcile.Result{}, err
 		}
 		log.Info("Updated Foo field to 'test'")

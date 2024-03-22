@@ -29,11 +29,13 @@ type MickaDeploymentSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// Foo is an example field of MickaDeployment. Edit mickadeployment_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	Foo        string `json:"foo,omitempty"`
+	NotChanged string `json:"notChanged,omitempty"`
 }
 
 // MickaDeploymentStatus defines the observed state of MickaDeployment
 type MickaDeploymentStatus struct {
+	BeforeFoo string `json:"beforeFoo,omitempty"`
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 }

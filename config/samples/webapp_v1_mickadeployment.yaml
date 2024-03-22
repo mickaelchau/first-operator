@@ -10,4 +10,5 @@ metadata:
   name: mickadeployment-sample
 spec:
   foo: "Micka"
+  notChanged: "Pas de changement"
   # TODO(user): Add fields here
